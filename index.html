@@ -152,7 +152,7 @@
         <article class="work-card phone-card kunnath-card" aria-label="Kunnath rent a car booking app" onclick="window.open('https://kunnathcarrental.com','_blank','noopener,noreferrer')">
           <img class="card-mockup kunnath-mockup" src="https://res.cloudinary.com/dfabpborj/image/upload/v1777577739/file_000000000b68720b8103a9391c5cac12_1_wmymj2.png" alt="" aria-hidden="true" />
           <h2>rent a car<br />booking app</h2>
-          <a href="https://kunnathcarrental.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Visit Kunnath</a>
+          <a href="https://kunnathcarrental.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Visit Site</a>
         </article>
 
         <article class="work-card seo-card cview-card" onclick="window.open('https://cview.ai','_blank','noopener,noreferrer')">
@@ -231,7 +231,7 @@
         <article class="work-card phone-card kunnath-card" aria-label="Kunnath rent a car booking app" aria-hidden="true" onclick="window.open('https://kunnathcarrental.com','_blank','noopener,noreferrer')">
           <img class="card-mockup kunnath-mockup" src="https://res.cloudinary.com/dfabpborj/image/upload/v1777577739/file_000000000b68720b8103a9391c5cac12_1_wmymj2.png" alt="" aria-hidden="true" />
           <h2>rent a car<br />booking app</h2>
-          <a href="https://kunnathcarrental.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Visit Kunnath</a>
+          <a href="https://kunnathcarrental.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Visit Site</a>
         </article>
 
         <article class="work-card seo-card cview-card" aria-hidden="true" onclick="window.open('https://cview.ai','_blank','noopener,noreferrer')">
@@ -312,9 +312,13 @@
         if (!portfolio || !track) return;
 
         const media = window.matchMedia("(max-width: 900px)");
-        let loopTimer = 0;
+        let loopFrame = 0;
+        let lastLoopTime = 0;
+        let loopWidth = 0;
+        let autoScrollLeft = 0;
         let paused = false;
         let pauseTimer = 0;
+        const mobileLoopSpeed = 72;
         const baseCardCount = Math.floor(track.children.length / 2);
 
         const addMobileLoopCards = () => {
@@ -331,48 +335,73 @@
           track.querySelectorAll("[data-mobile-loop-card]").forEach((card) => card.remove());
         };
 
-        const getLoopWidth = () => {
+        const measureLoopWidth = () => {
           const sets = track.querySelector("[data-mobile-loop-card]") ? 3 : 2;
-          return track.scrollWidth / sets;
+          loopWidth = track.scrollWidth / sets;
+          return loopWidth;
         };
 
-        const normalizeMobileLoop = () => {
-          const loopWidth = getLoopWidth();
-          if (!loopWidth) return;
-          if (portfolio.scrollLeft < loopWidth * 0.5) {
-            portfolio.scrollLeft += loopWidth;
-          } else if (portfolio.scrollLeft >= loopWidth * 1.5) {
-            portfolio.scrollLeft -= loopWidth;
+        const normalizeMobileLoop = (left = portfolio.scrollLeft) => {
+          if (!loopWidth) return left;
+          let normalized = left;
+          if (normalized < loopWidth * 0.5) {
+            normalized += loopWidth;
+          } else if (normalized >= loopWidth * 1.5) {
+            normalized -= loopWidth;
           }
+          if (normalized !== left) portfolio.scrollLeft = normalized;
+          return normalized;
         };
 
-        const tickMobileLoop = () => {
+        const stopMobileLoop = () => {
+          if (loopFrame) {
+            window.cancelAnimationFrame(loopFrame);
+            loopFrame = 0;
+          }
+          lastLoopTime = 0;
+          autoScrollLeft = 0;
+        };
+
+        const tickMobileLoop = (now) => {
+          if (!media.matches) {
+            stopMobileLoop();
+            return;
+          }
+          if (!lastLoopTime) lastLoopTime = now;
+          const delta = Math.min(now - lastLoopTime, 64);
+          lastLoopTime = now;
+
           if (!paused) {
-            portfolio.scrollLeft += 1;
-            normalizeMobileLoop();
+            autoScrollLeft = normalizeMobileLoop(autoScrollLeft + (mobileLoopSpeed * delta) / 1000);
+            portfolio.scrollLeft = autoScrollLeft;
           }
+          loopFrame = window.requestAnimationFrame(tickMobileLoop);
         };
 
         const pauseForSwipe = () => {
           if (!media.matches) return;
           paused = true;
+          autoScrollLeft = portfolio.scrollLeft;
           window.clearTimeout(pauseTimer);
           pauseTimer = window.setTimeout(() => {
-            normalizeMobileLoop();
+            autoScrollLeft = normalizeMobileLoop(portfolio.scrollLeft);
+            lastLoopTime = 0;
             paused = false;
           }, 1200);
         };
 
         const syncCarouselMode = () => {
-          window.clearInterval(loopTimer);
-          loopTimer = 0;
+          stopMobileLoop();
           paused = false;
           if (media.matches) {
             addMobileLoopCards();
-            portfolio.scrollLeft = getLoopWidth();
-            loopTimer = window.setInterval(tickMobileLoop, 24);
+            autoScrollLeft = measureLoopWidth();
+            portfolio.scrollLeft = autoScrollLeft;
+            loopFrame = window.requestAnimationFrame(tickMobileLoop);
           } else {
             removeMobileLoopCards();
+            loopWidth = 0;
+            autoScrollLeft = 0;
             portfolio.scrollLeft = 0;
           }
         };
@@ -381,7 +410,7 @@
         portfolio.addEventListener("touchstart", pauseForSwipe, { passive: true });
         portfolio.addEventListener("wheel", pauseForSwipe, { passive: true });
         portfolio.addEventListener("scroll", () => {
-          if (media.matches && paused) normalizeMobileLoop();
+          if (media.matches && paused) autoScrollLeft = normalizeMobileLoop(portfolio.scrollLeft);
         }, { passive: true });
 
         if (media.addEventListener) {

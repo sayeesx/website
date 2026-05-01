@@ -190,7 +190,9 @@ h1 > span:last-child { display: block; }
   transform: translate3d(0,0,0);
   animation: portfolio-loop 34s linear infinite;
 }
-.portfolio:hover .carousel-track { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) {
+  .portfolio:hover .carousel-track { animation-play-state: paused; }
+}
 
 /* ── Service ticker ───────────────────────────────────
    Desktop : static, centred, no animation
@@ -265,10 +267,12 @@ h1 > span:last-child { display: block; }
   width: 50%; height: 100%; transform: rotate(80deg);
   background: #ffffff77; filter: blur(10px); transition: 0.6s ease-in-out;
 }
-.work-card > a:not(.seo-card-link):hover, .dark-card > a:hover, .phone-card > a:hover, .wide-card > a:hover {
-  text-shadow: 0 5px 10px rgba(0,0,0,0.562); transform: scale(1.01); box-shadow: inset 0 0 10px rgba(255,0,0,0.575);
+@media (hover: hover) and (pointer: fine) {
+  .work-card > a:not(.seo-card-link):hover, .dark-card > a:hover, .phone-card > a:hover, .wide-card > a:hover {
+    text-shadow: 0 5px 10px rgba(0,0,0,0.562); transform: scale(1.01); box-shadow: inset 0 0 10px rgba(255,0,0,0.575);
+  }
+  .work-card > a:not(.seo-card-link):hover::after, .dark-card > a:hover::after, .phone-card > a:hover::after, .wide-card > a:hover::after { left: 100%; }
 }
-.work-card > a:not(.seo-card-link):hover::after, .dark-card > a:hover::after, .phone-card > a:hover::after, .wide-card > a:hover::after { left: 100%; }
 
 .stat-row {
   display: flex; justify-content: space-around;
@@ -463,6 +467,7 @@ h1 > span:last-child { display: block; }
     overflow-y: hidden;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto;
     touch-action: pan-x;
     scrollbar-width: none;
     margin-top: -34px;
@@ -475,6 +480,7 @@ h1 > span:last-child { display: block; }
      do not fight with a transformed track. */
   .carousel-track {
     animation: none;
+    contain: layout paint style;
   }
 
   /* Mobile ticker: animated left-to-right, independent element */
@@ -495,7 +501,7 @@ h1 > span:last-child { display: block; }
   .service-ticker span { font-size: 11px; line-height: 1.25; }
   .ticker-copy { display: inline; }
 
-  .work-card { flex-basis: 290px; height: 305px; }
+  .work-card { flex-basis: 290px; height: 305px; backface-visibility: hidden; transform: translateZ(0); }
   .stats-strip { width: min(100%, 330px); margin-top: 22px; margin-bottom: 22px; gap: 8px; }
   .stats-strip strong { font-size: 18px; }
   .stats-strip span   { font-size: 8px; }
@@ -534,7 +540,7 @@ h1 > span:last-child { display: block; }
 
   .work-card { flex-basis: 238px; height: 268px; border-radius: 10px; }
   .work-card > a:not(.seo-card-link), .dark-card > a, .phone-card > a, .wide-card > a { top: 12px; right: 12px; padding: 8px 12px; font-size: 8px; }
-  .work-card > a:not(.seo-card-link)::after, .dark-card > a::after, .phone-card > a::after, .wide-card > a::after { animation: button-mobile-shimmer 3s ease-in-out infinite; }
+  .work-card > a:not(.seo-card-link)::after, .dark-card > a::after, .phone-card > a::after, .wide-card > a::after { display: none; animation: none; }
 
   .seo-card, .wide-card { flex-basis: 286px; }
   .dark-card { padding: 21px 18px; }
