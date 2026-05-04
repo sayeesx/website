@@ -1,0 +1,24 @@
+{
+  "name": "Narrs",
+  "short_name": "Narrs",
+  "description": "Narrs is a modern tech agency for web, AI, apps, dashboards, and software solutions.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/assets/narrs.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/narrs.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

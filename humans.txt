@@ -1,0 +1,9 @@
+/* TEAM */
+Brand: Narrs
+Contact: narrsgroup@gmail.com
+Website: https://narrs.in/
+
+/* SITE */
+Language: English
+Standards: HTML5, CSS3, JSON-LD, Open Graph, Twitter Cards
+Purpose: Modern tech agency website for web, AI, apps, dashboards, and software solutions.
