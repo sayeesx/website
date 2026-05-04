@@ -1,6 +1,6 @@
 /* TEAM */
 Brand: Narrs
-Contact: narrsgroup@gmail.com
+Contact: hello@narrs.in
 Website: https://narrs.in/
 
 /* SITE */

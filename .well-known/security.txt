@@ -1,4 +1,4 @@
-Contact: mailto:narrsgroup@gmail.com
+Contact: mailto:hello@narrs.in
 Preferred-Languages: en
 Canonical: https://narrs.in/.well-known/security.txt
 Expires: 2027-05-04T00:00:00+05:30
